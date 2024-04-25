@@ -12,10 +12,54 @@
   background-color: rgb(228, 47, 47);
 }
 
-input:hover {
-  background-color: rgba(0, 0, 0, 0.3);
+.hover:hover {
+  background-color: rgb(135, 135, 252);
 }
 
 .selected {
   background-color: rgba(0, 0, 0, 0.5);
+}
+
+body {
+  background-color: rgb(202, 204, 243);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+}
+
+.quiz-box {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.quiz-box__header {
+  border-bottom: 1px solid black;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+}
+
+.quiz-box__header h2 {
+  display: block;
+  font-size: 30px;
+  margin-bottom: 15px;
+}
+
+.quiz-box__header span {
+  display: block;
+}
+
+.quiz-box__main form {
+  display: flex;
+  flex-direction: column;
+}
+
+.quiz-box__main input {
+  border: none;
+  border-radius: 10px;
+  background-color: rgb(202, 204, 243);
+  margin-bottom: 10px;
+  padding: 10px, 0;
 }

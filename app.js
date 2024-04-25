@@ -1,15 +1,15 @@
 const url = "https://opentdb.com/api.php?amount=1&type=multiple";
 
 const question = document.getElementById("question");
-const submit = document.getElementById("submit");
-const next = document.getElementById("next");
-
 const form = document.querySelector(".quiz-box__main form");
 const ch1 = document.getElementById("choice1");
 const ch2 = document.getElementById("choice2");
 const ch3 = document.getElementById("choice3");
 const ch4 = document.getElementById("choice4");
 const chs = [ch1, ch2, ch3, ch4];
+
+const submit = document.getElementById("submit");
+const next = document.getElementById("next");
 
 let answer = "";
 let userChoice = "";
@@ -46,12 +46,8 @@ function onClickSubmit(event) {
   event.preventDefault();
 
   if (userChoice === "") {
-    console.log("choose answer!");
-  } else if (userChoice === answer) {
-    console.log("correct!");
-    printResult();
+    console.log("choose answer");
   } else {
-    console.log("wrong!");
     printResult();
   }
 }
@@ -63,6 +59,7 @@ function printResult() {
   chs.forEach((ch) => {
     ch.removeEventListener("click", onClickChoice);
     ch.setAttribute("disabled", "true");
+    ch.classList.remove("hover");
 
     if (ch.value === answer) {
       ch.classList.remove("selected");
