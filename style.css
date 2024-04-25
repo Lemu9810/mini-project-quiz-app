@@ -1,0 +1,21 @@
+@import "reset.css";
+
+.hidden {
+  display: none;
+}
+
+.correct {
+  background-color: rgb(101, 241, 101);
+}
+
+.wrong {
+  background-color: rgb(228, 47, 47);
+}
+
+input:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.selected {
+  background-color: rgba(0, 0, 0, 0.5);
+}
