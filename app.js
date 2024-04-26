@@ -1,6 +1,7 @@
-const url = "https://opentdb.com/api.php?amount=1&type=multiple";
-
+const url = "https://opentdb.com/api.php?amount=10&type=multiple";
+const quizBox = document.querySelector(".quiz-box");
 const question = document.getElementById("question");
+const score = document.getElementById("score");
 const form = document.querySelector(".quiz-box__main form");
 const ch1 = document.getElementById("choice1");
 const ch2 = document.getElementById("choice2");
@@ -11,35 +12,44 @@ const chs = [ch1, ch2, ch3, ch4];
 const submit = document.getElementById("submit");
 const next = document.getElementById("next");
 
+let quizData;
 let answer = "";
 let userChoice = "";
+let quizCount = 1;
+let correct = 0;
+let wrong = 0;
 
-function fetchData(url) {
-  fetch(url)
-    .then((response) => response.json())
-    .then((data) => printData(data));
+async function fetchData(url) {
+  try {
+    const res = await fetch(url);
+    quizData = await res.json();
+  } catch (err) {
+    console.error("Error:", err);
+  }
 }
 
-function printData(data) {
-  //console.log(data);
-  question.innerText = data.results[0].question;
+function printData() {
+  resetChoice(false);
+  question.innerHTML = quizData.results[quizCount].question;
+  score.innerText = `Number ${quizCount} / Correct : ${correct} / Wrong : ${wrong}`;
 
-  answer = data.results[0].correct_answer;
-  const answers = data.results[0].incorrect_answers;
+  answer = quizData.results[quizCount].correct_answer;
+  const answers = quizData.results[quizCount].incorrect_answers;
   const answerNum = Math.floor(Math.random() * 4);
-  answers.splice(answerNum, 0, answer);
 
+  answers.splice(answerNum, 0, answer);
   chs.forEach((ch, idx) => {
-    ch.value = answers[idx];
+    ch.innerHTML = answers[idx];
   });
 }
 
 function onClickChoice(event) {
+  event.preventDefault();
   chs.forEach((ch) => {
     ch.classList.remove("selected");
   });
   event.target.classList.add("selected");
-  userChoice = event.target.value;
+  userChoice = event.target.innerHTML;
 }
 
 function onClickSubmit(event) {
@@ -52,31 +62,81 @@ function onClickSubmit(event) {
   }
 }
 
+function onClickNext(event) {
+  event.preventDefault();
+  userChoice = "";
+  if (quizCount === 10) {
+    finishQuiz();
+  } else {
+    printData();
+  }
+}
+
 function printResult() {
-  next.classList.remove("hidden");
-  submit.classList.add("hidden");
+  resetChoice(true);
 
   chs.forEach((ch) => {
-    ch.removeEventListener("click", onClickChoice);
-    ch.setAttribute("disabled", "true");
-    ch.classList.remove("hover");
-
-    if (ch.value === answer) {
-      ch.classList.remove("selected");
+    if (ch.innerHTML === answer) {
       ch.classList.add("correct");
     }
-
-    if (ch.value === userChoice && ch.value !== answer) {
-      ch.classList.remove("selected");
+    if (ch.innerHTML === userChoice && ch.innerHTML !== answer) {
       ch.classList.add("wrong");
     }
   });
+
+  answer === userChoice ? correct++ : wrong++;
+  quizCount++;
 }
 
+function resetChoice(disable) {
+  if (disable) {
+    next.classList.remove("hidden");
+    submit.classList.add("hidden");
+    chs.forEach((ch) => {
+      ch.setAttribute("disabled", "true");
+      ch.classList.remove("hover", "selected");
+    });
+  } else {
+    next.classList.add("hidden");
+    submit.classList.remove("hidden");
+    chs.forEach((ch) => {
+      ch.removeAttribute("disabled");
+      ch.classList.add("hover");
+      ch.classList.remove("correct", "wrong");
+    });
+  }
+}
+
+function finishQuiz() {
+  quizBox.innerHTML = "";
+
+  const finish = document.createElement("span");
+  finish.innerText = `your score is ${correct}/10`;
+  quizBox.appendChild(finish);
+
+  const restart = document.createElement("input");
+  restart.setAttribute("type", "submit");
+  restart.setAttribute("id", "restart");
+  restart.setAttribute("value", "restart");
+  restart.addEventListener("click", onClickRestart);
+  quizBox.appendChild(restart);
+}
+
+function onClickRestart() {
+  location.reload();
+}
+
+(async () => {
+  try {
+    fetchData(url) //
+      .then(printData);
+  } catch (err) {
+    console.error(err);
+  }
+})();
+
 submit.addEventListener("click", onClickSubmit);
-next.addEventListener("click", window.location.reload);
+next.addEventListener("click", onClickNext);
 chs.forEach((ch) => {
   ch.addEventListener("click", onClickChoice);
 });
-
-fetchData(url);

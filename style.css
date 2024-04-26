@@ -33,6 +33,7 @@ body {
   background-color: white;
   padding: 20px;
   border-radius: 10px;
+  width: 50%;
 }
 
 .quiz-box__header {
@@ -56,10 +57,23 @@ body {
   flex-direction: column;
 }
 
-.quiz-box__main input {
+.quiz-box__main input,
+.quiz-box__main button {
   border: none;
   border-radius: 10px;
-  background-color: rgb(202, 204, 243);
   margin-bottom: 10px;
-  padding: 10px, 0;
+  padding: 10px;
+}
+
+#submit,
+#next,
+#restart {
+  background-color: rgb(72, 72, 207);
+  color: white;
+}
+
+#submit:hover,
+#next:hover,
+#restart:hover {
+  background-color: rgb(44, 44, 133);
 }
